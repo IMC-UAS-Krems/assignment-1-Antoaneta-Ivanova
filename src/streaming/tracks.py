@@ -25,10 +25,9 @@ class Track(abc.ABC):
         self.duration_seconds = duration_seconds
         self.genre = genre
 
-    @abc.abstractmethod 
+    @abc.abstractmethod
     def duration_minutes(self) -> float:
         pass
-        
 
 
 class Song(Track):
