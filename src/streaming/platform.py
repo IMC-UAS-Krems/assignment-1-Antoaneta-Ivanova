@@ -8,11 +8,11 @@ Classes to implement:
   - StreamingPlatform
 """
 
-from albums import Artist
-from artists import Album
-from playlists import Playlist
-from sessions import ListeningSession
-from users import User
+from .albums import Album
+from .artists import Artist
+from .playlists import Playlist
+from .sessions import ListeningSession
+from .users import User
 
 
 class StreamingPlatform:
@@ -56,8 +56,8 @@ class StreamingPlatform:
     def get_album(self, album_id=None):
         pass
 
-    def all_users(self, album) -> list[User]:
+    def all_users(self, users) -> list[User]:
         pass
 
-    def all_tracks(self, album) -> list[Track]:
+    def all_tracks(self, tracks) -> list[Track]:
         pass

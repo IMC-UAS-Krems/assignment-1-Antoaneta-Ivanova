@@ -15,6 +15,8 @@ Classes to implement:
 """
 
 import abc
+from .artists import Artist
+from datetime import date
 
 
 class Track(abc.ABC):
@@ -25,41 +27,53 @@ class Track(abc.ABC):
         self.duration_seconds = duration_seconds
         self.genre = genre
 
-    @abc.abstractmethod
     def duration_minutes(self) -> float:
-        pass
+        return self.duration_seconds / 60.0
+
+    def __eq__(self, other):
+        if not isinstance(other, Track):
+            return False
+        return self.track_id == other.track_id
 
 
 class Song(Track):
+
     def __init__(
-        self, track_id: str, title: str, duration_seconds: int, genre: str, artist
+        self,
+        track_id: str,
+        title: str,
+        duration_seconds: int,
+        genre: str,
+        artist: Artist,
     ):
         super().__init__(track_id, title, duration_seconds, genre)
         self.artist = artist
 
 
 class SingleRelease(Song):
+
     def __init__(
         self,
         track_id: str,
         title: str,
         duration_seconds: int,
         genre: str,
-        artist,
-        release_date,
+        artist: Artist,
+        release_date: date,
     ):
         super().__init__(track_id, title, duration_seconds, genre, artist)
         self.release_date = release_date
 
 
 class AlbumTrack(Song):
+
     def __init__(
         self,
         track_id: str,
         title: str,
         duration_seconds: int,
         genre: str,
-        artist,
+        artist: Artist,
         track_number: int,
         album=None,
     ):
@@ -69,6 +83,7 @@ class AlbumTrack(Song):
 
 
 class Podcast(Track):
+
     def __init__(
         self,
         track_id: str,
@@ -76,7 +91,7 @@ class Podcast(Track):
         duration_seconds: int,
         genre: str,
         host: str,
-        description: str,
+        description: str="",
     ):
         super().__init__(track_id, title, duration_seconds, genre)
         self.host = host
@@ -84,6 +99,7 @@ class Podcast(Track):
 
 
 class NarrativeEpisode(Podcast):
+
     def __init__(
         self,
         track_id: str,
@@ -91,9 +107,9 @@ class NarrativeEpisode(Podcast):
         duration_seconds: int,
         genre: str,
         host: str,
-        description: str,
         season: int,
         episode_number: int,
+        description: str = "",
     ):
         super().__init__(track_id, title, duration_seconds, genre, host, description)
         self.season = season
@@ -108,8 +124,8 @@ class InterviewEpisode(Podcast):
         duration_seconds: int,
         genre: str,
         host: str,
-        description: str,
         guest: str,
+        description: str = ""
     ):
         super().__init__(track_id, title, duration_seconds, genre, host, description)
         self.guest = guest
