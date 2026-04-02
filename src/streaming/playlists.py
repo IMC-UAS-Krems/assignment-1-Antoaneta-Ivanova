@@ -8,7 +8,7 @@ Classes to implement:
     - CollaborativePlaylist
 """
 
-from users import User
+from .users import User
 
 class Playlist:
     def __init__(self, playlist_id: str, name: str, owner: User):
@@ -23,7 +23,7 @@ class Playlist:
     def remove_track(self, track_id) -> None:
         pass
     
-    def total_duration_seconds(self) -> int:
+    def total_duration_seconds(self):
         pass
 
 

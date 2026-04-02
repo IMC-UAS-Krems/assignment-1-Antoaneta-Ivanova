@@ -91,7 +91,7 @@ class Podcast(Track):
         duration_seconds: int,
         genre: str,
         host: str,
-        description: str="",
+        description: str = "",
     ):
         super().__init__(track_id, title, duration_seconds, genre)
         self.host = host
@@ -125,7 +125,7 @@ class InterviewEpisode(Podcast):
         genre: str,
         host: str,
         guest: str,
-        description: str = ""
+        description: str = "",
     ):
         super().__init__(track_id, title, duration_seconds, genre, host, description)
         self.guest = guest

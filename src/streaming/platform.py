@@ -56,8 +56,8 @@ class StreamingPlatform:
     def get_album(self, album_id=None):
         pass
 
-    def all_users(self, users) -> list[User]:
+    def all_users(self, users):
         pass
 
-    def all_tracks(self, tracks) -> list[Track]:
+    def all_tracks(self, tracks):
         pass

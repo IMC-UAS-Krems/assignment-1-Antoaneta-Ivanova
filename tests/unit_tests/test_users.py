@@ -83,4 +83,3 @@ class TestUsers:
         family.add_sub_user(member1)
         family.add_sub_user(member2)
         assert len(family.sub_users) == 2
-

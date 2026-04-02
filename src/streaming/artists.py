@@ -18,5 +18,5 @@ class Artist:
         def add_track(self, track) -> None:
                 pass
                 
-        def track_count(self) -> int:
+        def track_count(self):
                 pass

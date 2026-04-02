@@ -11,31 +11,27 @@ Classes to implement:
     - FamilyMember
 """
 
-import abc
+from datetime import date
 
 
-class User(abc.ABC):
+class User:
     def __init__(self, user_id: str, name: str, age: int):
         self.user_id = user_id
         self.name = name
         self.age = age
         self.sessions = []
 
-    @abc.abstractmethod
     def add_session(self, session) -> None:
-        pass
+        self.sessions.append(session)
 
-    @abc.abstractmethod
     def total_listening_seconds(self) -> int:
-        pass
+        return sum(session.duration_listened_seconds for session in self.sessions)
 
-    @abc.abstractmethod
     def total_listening_minutes(self) -> float:
-        pass
+        return self.total_listening_seconds() / 60.0
 
-    @abc.abstractmethod
     def unique_tracks_listened(self) -> set[str]:
-        pass
+        return {session.track.track_id for session in self.sessions}
 
 
 class FreeUser(User):
@@ -44,22 +40,22 @@ class FreeUser(User):
 
 class PremiumUser(User):
 
-    def __init__(self, user_id: str, name: str, age: int, subscription_start):
+    def __init__(self, user_id: str, name: str, age: int, subscription_start: date):
         super().__init__(user_id, name, age)
         self.subscription_start = subscription_start
 
 
-class FamilyAccountUser(User): 
-    
+class FamilyAccountUser(User):
+
     def __init__(self, user_id: str, name: str, age: int):
         super().__init__(user_id, name, age)
-        self.sub_users= []
-    
-    def add_sub_user(self, sub_user) -> None: 
-        pass
-    
-    def all_members(self) -> #list[User]
-        pass
+        self.sub_users = []
+
+    def add_sub_user(self, sub_user) -> None:
+        self.sub_users.append(sub_user)
+
+    def all_members(self):
+        return [self] + self.sub_users
 
 
 class FamilyMember(User):
