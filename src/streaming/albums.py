@@ -19,10 +19,12 @@ class Album:
         self.tracks = []
 
     def add_track(self, track) -> None:
-        pass
+        track.album = self
+        self.tracks.append(track)
+        self.tracks.sort(key=lambda t: t.track_number)
 
-    def track_ids(self):
-        pass
+    def track_ids(self) -> set[str]:
+        return {track.track_id for track in self.tracks}
 
     def duration_seconds(self):
-        pass
+        return sum(track.duration_seconds for track in self.tracks)
