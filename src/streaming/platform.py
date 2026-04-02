@@ -13,6 +13,7 @@ from .artists import Artist
 from .playlists import Playlist
 from .sessions import ListeningSession
 from .users import User
+from .tracks import Track
 
 
 class StreamingPlatform:
@@ -24,7 +25,7 @@ class StreamingPlatform:
         self._artists = {}
         self._albums = {}
         self._playlists = {}
-        self._sessions = {}
+        self._sessions = []
 
     def add_track(self, track) -> None:
         pass
