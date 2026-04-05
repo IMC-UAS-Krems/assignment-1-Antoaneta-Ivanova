@@ -30,7 +30,7 @@ class Track(abc.ABC):
     def duration_minutes(self) -> float:
         return self.duration_seconds / 60.0
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if not isinstance(other, Track):
             return False
         return self.track_id == other.track_id
