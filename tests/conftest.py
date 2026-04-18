@@ -43,7 +43,10 @@ def platform() -> StreamingPlatform:
     drake = Artist("a2", "Drake", genre="hiphop")
     weeknd = Artist("a3", "Weeknd", genre="r&b")
     selena = Artist("a4", "Selena", genre="pop")
-    for artist in (pixels, drake, weeknd, selena):
+    beyonce = Artist("a5", "Beyonce", genre="pop")
+    justin = Artist("a6", "Justin Bieber", genre="pop")
+
+    for artist in (pixels, drake, weeknd, selena, beyonce, justin):
         platform.add_artist(artist)
 
     # ------------------------------------------------------------------
@@ -59,45 +62,53 @@ def platform() -> StreamingPlatform:
         pixels.add_track(track)
     platform.add_album(dd)
 
-    album2 = Album("alb2", "After Hours", artist=weeknd, release_year=2020)
+    after_hours = Album("alb2", "After Hours", artist=weeknd, release_year=2020)
 
     t4 = AlbumTrack("t4", "Heartless", 355, "r&b", weeknd, track_number=1)
-    t5 = AlbumTrack("t5", "City Glow", 205, "r&b", weeknd, track_number=2)
+    t5 = AlbumTrack("t5", "Faith", 283, "r&b", weeknd, track_number=2)
+    t6 = AlbumTrack("t6", "Save Your Tears", 216, "r&b", weeknd, track_number=3)
 
-    for track in (t4, t5):
-        album2.add_track(track)
+    for track in (t4, t5, t6):
+        after_hours.add_track(track)
         platform.add_track(track)
         weeknd.add_track(track)
 
-    platform.add_album(album2)
-
-    # ------------------------------------------------------------------
-    # Single Releases
-    # ------------------------------------------------------------------
-    t6 = SingleRelease(
-        "t6", "God's Plan", 198, "hiphop", drake, release_date=date(2018, 1, 19)
-    )
-    t7 = SingleRelease(
-        "t7", "Calm Down", 210, "pop", selena, release_date=date(2023, 8, 25)
-    )
-
-    for track, artist in ((t6, drake), (t7, selena)):
-        platform.add_track(track)
-        artist.add_track(track)
+    platform.add_album(after_hours)
 
     # ------------------------------------------------------------------
     # Users
     # ------------------------------------------------------------------
     alice = FreeUser("u1", "Alice", age=30)
-    bob = PremiumUser("u2", "Bob", age=25, subscription_start=date(2023, 1, 2))
-    chad = PremiumUser("u3", "Chad", age=25, subscription_start=date(2024, 3, 1))
+    jasmine = FreeUser("u2", "Jasmine", age=20)
+    jack = FreeUser("u3", "Jack", age=25)
 
-    mom = FamilyAccountUser("u3", "Melissa", age=40)
-    child = FamilyMember("u4", "Toni", age=16, parent=mom)
+    bob = PremiumUser("u4", "Bob", age=25, subscription_start=date(2023, 1, 1))
+    john = PremiumUser("u5", "John", age=18, subscription_start=date(2024, 5, 8))
+    betty = PremiumUser("u6", "Betty", age=66, subscription_start=date(2025, 7, 2))
 
-    mom.add_sub_user(child)
+    carl = FamilyAccountUser("u7", "Carl", age=31)
+    child1 = FamilyMember("u8", "James", age=21, parent=carl)
+    carl.add_sub_user(child1)
 
-    for user in (alice, bob, mom, child, chad):
+    sam = FamilyAccountUser("u9", "Sam", age=21)
+    sibling1 = FamilyMember("u10", "Sally", age=20, parent=sam)
+    sibling2 = FamilyMember("u11", "Tyla", age=16, parent=sam)
+    sam.add_sub_user(sibling1)
+    sam.add_sub_user(sibling2)
+
+    for user in (
+        alice,
+        bob,
+        jasmine,
+        jack,
+        john,
+        betty,
+        child1,
+        sibling1,
+        sibling2,
+        carl,
+        sam,
+    ):
         platform.add_user(user)
 
     # ------------------------------------------------------------------
@@ -105,31 +116,60 @@ def platform() -> StreamingPlatform:
     # ------------------------------------------------------------------
 
     s1 = ListeningSession("s1", alice, t1, RECENT, 150)
-    s2 = ListeningSession("s2", alice, t3, OLD, 185)
+    s2 = ListeningSession("s2", jasmine, t1, RECENT + timedelta(hours=1), 120)
+    s3 = ListeningSession("s3", bob, t2, RECENT + timedelta(hours=2), 210)
+    s4 = ListeningSession("s4", john, t2, RECENT + timedelta(hours=3), 180)
+    s5 = ListeningSession("s5", sibling2, t4, RECENT + timedelta(hours=4), 355)
+    s6 = ListeningSession("s6", sibling2, t5, RECENT + timedelta(hours=5), 283)
+    s7 = ListeningSession("s7", sibling2, t6, RECENT + timedelta(hours=6), 216)
+    s9 = ListeningSession("s9", betty, t3, RECENT + timedelta(hours=7), 200)
+    s8 = ListeningSession("s8", jack, t3, OLD, 195)
 
-    s3 = ListeningSession("s3", bob, t1, RECENT + timedelta(hours=1), 122)
-    s4 = ListeningSession("s4", bob, t2, RECENT + timedelta(hours=2), 210)
-
-    for session in (s1, s2, s3, s4):
+    for session in (s1, s2, s3, s4, s5, s6, s7, s8, s9):
         platform.record_session(session)
+
+    # ------------------------------------------------------------------
+    # Single Releases
+    # ------------------------------------------------------------------
+    t7 = SingleRelease(
+        "t7", "God's Plan", 198, "hiphop", drake, release_date=date(2018, 6, 13)
+    )
+    t8 = SingleRelease(
+        "t8", "Calm Down", 210, "pop", selena, release_date=date(2023, 8, 20)
+    )
+
+    for track, artist in ((t7, drake), (t8, selena)):
+        platform.add_track(track)
+        artist.add_track(track)
 
     # ------------------------------------------------------------------
     # Playlists
     # ------------------------------------------------------------------
-    p1 = Playlist("p1", "My Playlist Mix", alice)
+
+    p1 = Playlist("p1", "Alice's Playlist", alice)
+
     p1.add_track(t1)
     p1.add_track(t4)
+    p1.add_track(t6)
+
+    platform.add_playlist(p1)
 
     p2 = CollaborativePlaylist("p2", "Collab Playlist", bob)
-    p2.add_contributor(child)
-    p2.add_contributor(mom)
     p2.add_track(t1)
     p2.add_track(t4)
     p2.add_track(t5)
     p2.add_track(t6)
     p2.add_track(t7)
+    p2.add_track(t8)
 
-    platform.add_playlist(p1)
+    p2.add_contributor(jasmine)
+    p2.add_contributor(jack)
+    p2.add_contributor(betty)
+    p2.add_contributor(sam)
+
+    p2.remove_contributor(jack)
+    p2.remove_contributor(bob)
+
     platform.add_playlist(p2)
 
     return platform
