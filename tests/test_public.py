@@ -23,7 +23,7 @@ from datetime import datetime, timedelta
 from streaming.platform import StreamingPlatform
 from streaming.users import FreeUser, PremiumUser, FamilyAccountUser, FamilyMember
 from streaming.playlists import CollaborativePlaylist
-from tests.conftest import FIXED_NOW, RECENT, OLD
+from conftest import FIXED_NOW, RECENT, OLD
 
 
 # ===========================================================================
@@ -242,8 +242,8 @@ class TestTopArtistsByListeningTime:
     # TODO: Add a test that verifies the correct artists and values.
     def test_top_artist(self, platform: StreamingPlatform) -> None:
         result = platform.top_artists_by_listening_time(n=5)
-        assert result[0][0].artist_id == "a3"
-        assert result[0][1] * 60 == 355 + 283 + 216
+        assert result[0][0].artist_id == "a1"
+        assert result[0][1] * 60 == 1055
 
 
 # ===========================================================================

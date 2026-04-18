@@ -116,24 +116,28 @@ class StreamingPlatform:
         track_and_users = {}
 
         for session in self._sessions:
-            track = session.track
+            track_id = session.track.track_id
             user_id = session.user.user_id
 
-            if track not in track_and_users:
-                track_and_users[track] = set()
+            if track_id not in track_and_users:
+                track_and_users[track_id] = set()
 
-            track_and_users[track].add(user_id)
+            track_and_users[track_id].add(user_id)
 
         highest_count = 0
         track_with_most_distinct_listeners = None
 
-        for track, users in track_and_users.items():
+        for track_id, users in track_and_users.items():
             if len(users) > highest_count:
                 highest_count = len(users)
-                track_with_most_distinct_listeners = track
+                track_with_most_distinct_listeners = track_id
 
-        return track_with_most_distinct_listeners
-
+        if track_with_most_distinct_listeners is not None:
+            return self.get_track(track_with_most_distinct_listeners)
+        else:
+            return None
+           
+        
     # Q4: Average Session Duration by User Type--------------------------------------------------------------------------------------------------------------
 
     def avg_session_duration_by_user_type(self) -> list[tuple[str, float]]:
