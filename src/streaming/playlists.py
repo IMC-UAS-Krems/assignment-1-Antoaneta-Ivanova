@@ -35,12 +35,14 @@ class CollaborativePlaylist(Playlist):
 
     def __init__(self, playlist_id: str, name: str, owner: User):
         super().__init__(playlist_id, name, owner)
-        self.contributors: List[User] = []
+        self.contributors: List[User] = [owner]
 
     def add_contributor(self, user: User) -> None:
         if user not in self.contributors:
             self.contributors.append(user)
 
     def remove_contributor(self, user: User) -> None:
+        if user == self.owner:
+            return
         if user in self.contributors:
             self.contributors.remove(user)

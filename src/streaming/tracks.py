@@ -18,13 +18,14 @@ from abc import ABC
 
 # Read about the abstract class here:   https://www.geeksforgeeks.org/python/abstract-classes-in-python/
 
-from .artists import Artist
+
 from datetime import date
 
 from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from .albums import Album
+    from .artists import Artist
 # Read about the module typing here:   https://docs.python.org/3/library/typing.html
 
 
@@ -53,7 +54,7 @@ class Song(Track):
         title: str,
         duration_seconds: int,
         genre: str,
-        artist: Artist,
+        artist: "Artist",
     ):
         super().__init__(track_id, title, duration_seconds, genre)
         self.artist = artist
@@ -67,7 +68,7 @@ class SingleRelease(Song):
         title: str,
         duration_seconds: int,
         genre: str,
-        artist: Artist,
+        artist: "Artist",
         release_date: date,
     ):
         super().__init__(track_id, title, duration_seconds, genre, artist)
@@ -82,7 +83,7 @@ class AlbumTrack(Song):
         title: str,
         duration_seconds: int,
         genre: str,
-        artist: Artist,
+        artist: "Artist",
         track_number: int,
         album: "Optional[Album]" = None,
     ):

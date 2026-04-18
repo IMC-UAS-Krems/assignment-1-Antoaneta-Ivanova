@@ -21,9 +21,9 @@ class Album:
         self.tracks: List[AlbumTrack] = []
 
     def add_track(self, track: AlbumTrack) -> None:
-        if track not in self.tracks:
-            self.tracks.append(track)
-            track.album = self  # This is added cause track belongs to the album, and an album consists of albumtrack, aka. bidirectional association
+        track.album = self
+        self.tracks.append(track)
+        self.tracks.sort(key=lambda track: track.track_number)
 
     def track_ids(self) -> Set[str]:
         return {track.track_id for track in self.tracks}
