@@ -14,8 +14,9 @@ from .playlists import Playlist, CollaborativePlaylist
 from .sessions import ListeningSession
 from .users import User, PremiumUser, FamilyAccountUser, FamilyMember, FreeUser
 from .tracks import Track, Song
-from datetime import datetime
-from datetime import timedelta
+
+from datetime import datetime, timedelta
+from typing import Dict, List, Tuple
 
 """https://www.geeksforgeeks.org/python/python-datetime-timedelta-function/"""
 
@@ -24,12 +25,12 @@ class StreamingPlatform:
 
     def __init__(self, name: str):
         self.name = name
-        self._catalogue: dict[str, Track] = {}
-        self._users: dict[str, User] = {}
-        self._artists: dict[str, Artist] = {}
-        self._albums: dict[str, Album] = {}
-        self._playlists: dict[str, Playlist] = {}
-        self._sessions: list[ListeningSession] = []
+        self._catalogue: Dict[str, Track] = {}
+        self._users: Dict[str, User] = {}
+        self._artists: Dict[str, Artist] = {}
+        self._albums: Dict[str, Album] = {}
+        self._playlists: Dict[str, Playlist] = {}
+        self._sessions: List[ListeningSession] = []
 
     def add_track(self, track: Track) -> None:
         self._catalogue[track.track_id] = track
@@ -62,11 +63,13 @@ class StreamingPlatform:
     def get_album(self, album_id: str) -> Album | None:
         return self._albums.get(album_id)
 
-    def all_users(self) -> list[User]:
+    def all_users(self) -> List[User]:
         return list(self._users.values())
 
-    def all_tracks(self) -> list[Track]:
+    def all_tracks(self) -> List[Track]:
         return list(self._catalogue.values())
+
+    # Q1: Total Cumulative Listening Time---------------------------------------------------------------------------------------------------------
 
     def total_listening_time_minutes(self, start: datetime, end: datetime) -> float:
         total_cumulative_listening_time_in_minutes = 0
@@ -74,17 +77,19 @@ class StreamingPlatform:
         for session in self._sessions:
             if start <= session.timestamp <= end:
                 total_cumulative_listening_time_in_minutes += (
-                    session.duration_listened_seconds / 60.0
+                    session.duration_listened_seconds
                 )
 
-        return total_cumulative_listening_time_in_minutes
+        return total_cumulative_listening_time_in_minutes / 60.0
+
+    # Q2: Average Unique Tracks per Premium User----------------------------------------------------------------------------------------------------------
 
     def avg_unique_tracks_per_premium_user(self, days: int = 30) -> float:
 
-        premium_users = []
-        for user in self._users.values():
-            if isinstance(user, PremiumUser):
-                premium_users.append(user)
+        premium_users = [
+            user for user in self._users.values() if isinstance(user, PremiumUser)
+        ]
+
         if not premium_users:
             return 0.0
 
@@ -100,6 +105,8 @@ class StreamingPlatform:
             number_of_unique_tracks += len(unique_tracks)
 
         return number_of_unique_tracks / len(premium_users)
+
+    # Q3: Track with Most Distinct Listeners---------------------------------------------------------------------------------------------------------
 
     def track_with_most_distinct_listeners(self) -> Track | None:
 
@@ -126,6 +133,8 @@ class StreamingPlatform:
                 track_with_most_distinct_listeners = track
 
         return track_with_most_distinct_listeners
+
+    # Q4: Average Session Duration by User Type--------------------------------------------------------------------------------------------------------------
 
     def avg_session_duration_by_user_type(self) -> list[tuple[str, float]]:
 
@@ -158,6 +167,8 @@ class StreamingPlatform:
         averages.sort(key=lambda x: x[1], reverse=True)
         return averages
 
+    # Q5: Total Listening Time for Underage Sub-Users----------------------------------------------------------------------------------------------------------
+
     def total_listening_time_underage_sub_users_minutes(
         self, age_threshold: int = 18
     ) -> float:
@@ -171,6 +182,8 @@ class StreamingPlatform:
                 total_minutes += session.duration_listened_seconds / 60.0
 
         return total_minutes
+
+    # Q6: Top Artists by Listening Time-----------------------------------------------------------------------------------------------------------------------
 
     def top_artists_by_listening_time(self, n: int = 5) -> list[tuple[Artist, float]]:
 
@@ -191,6 +204,8 @@ class StreamingPlatform:
         )
 
         return top_artists[:n]
+
+    # Q7: User's Top Genre-------------------------------------------------------------------------------------------------------------------------
 
     def user_top_genre(self, user_id: str) -> tuple[str, float] | None:
 
@@ -214,6 +229,7 @@ class StreamingPlatform:
 
         return (top_genre, percentage)
 
+    # Q8: Collaborative Playlists with Many Artists--------------------------------------------------------------------------------------------------------------------------
     def collaborative_playlists_with_many_artists(
         self, threshold: int = 3
     ) -> list[CollaborativePlaylist]:
@@ -232,6 +248,8 @@ class StreamingPlatform:
                     result.append(playlist)
 
         return result
+
+    # Q9: Average Tracks per Playlist Type---------------------------------------------------------------------------------------------------------
 
     def avg_tracks_per_playlist_type(self) -> dict[str, float]:
 
@@ -259,6 +277,8 @@ class StreamingPlatform:
             "Playlist": avg_playlist,
             "CollaborativePlaylist": avg_collab,
         }
+
+    # Q10: Users Who Completed Albums--------------------------------------------------------------------------------------------------------------
 
     def users_who_completed_albums(self) -> list[tuple[User, list[str]]]:
         result = []
