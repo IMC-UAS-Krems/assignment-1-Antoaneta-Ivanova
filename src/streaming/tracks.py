@@ -14,12 +14,21 @@ Classes to implement:
     - AudiobookTrack
 """
 
-import abc
+from abc import ABC
+
+# Read about the abstract class here:   https://www.geeksforgeeks.org/python/abstract-classes-in-python/
+
 from .artists import Artist
 from datetime import date
 
+from typing import TYPE_CHECKING, Optional
 
-class Track(abc.ABC):
+if TYPE_CHECKING:
+    from .albums import Album
+# Read about the module typing here:   https://docs.python.org/3/library/typing.html
+
+
+class Track(ABC):
 
     def __init__(self, track_id: str, title: str, duration_seconds: int, genre: str):
         self.track_id = track_id
@@ -75,7 +84,7 @@ class AlbumTrack(Song):
         genre: str,
         artist: Artist,
         track_number: int,
-        album=None,
+        album: "Optional[Album]" = None,
     ):
         super().__init__(track_id, title, duration_seconds, genre, artist)
         self.track_number = track_number

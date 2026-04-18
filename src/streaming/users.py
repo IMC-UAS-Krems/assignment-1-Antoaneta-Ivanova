@@ -11,17 +11,22 @@ Classes to implement:
     - FamilyMember
 """
 
+from abc import ABC
 from datetime import date
+from typing import List, Set, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .sessions import ListeningSession
 
 
-class User:
+class User(ABC):
     def __init__(self, user_id: str, name: str, age: int):
         self.user_id = user_id
         self.name = name
         self.age = age
-        self.sessions = []
+        self.sessions: List["ListeningSession"] = []
 
-    def add_session(self, session) -> None:
+    def add_session(self, session: "ListeningSession") -> None:
         self.sessions.append(session)
 
     def total_listening_seconds(self) -> int:
@@ -30,7 +35,7 @@ class User:
     def total_listening_minutes(self) -> float:
         return self.total_listening_seconds() / 60.0
 
-    def unique_tracks_listened(self) -> set[str]:
+    def unique_tracks_listened(self) -> Set[str]:
         return {session.track.track_id for session in self.sessions}
 
 
@@ -49,13 +54,15 @@ class FamilyAccountUser(User):
 
     def __init__(self, user_id: str, name: str, age: int):
         super().__init__(user_id, name, age)
-        self.sub_users = []
+        self.sub_users: List["FamilyMember"] = []
 
-    def add_sub_user(self, sub_user) -> None:
-        self.sub_users.append(sub_user)
+    def add_sub_user(self, sub_user: "FamilyMember") -> None:
 
-    def all_members(self):
-        return [self] + self.sub_users
+        if sub_user not in self.sub_users:
+            self.sub_users.append(sub_user)
+
+    def all_members(self) -> List["User"]:
+        return [self, *self.sub_users]
 
 
 class FamilyMember(User):

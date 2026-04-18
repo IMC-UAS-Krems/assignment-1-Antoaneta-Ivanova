@@ -7,7 +7,9 @@ Classes to implement:
   - Album
 """
 
+from typing import List, Set
 from .artists import Artist
+from .tracks import AlbumTrack
 
 
 class Album:
@@ -16,15 +18,15 @@ class Album:
         self.title = title
         self.artist = artist
         self.release_year = release_year
-        self.tracks = []
+        self.tracks: List[AlbumTrack] = []
 
-    def add_track(self, track) -> None:
-        track.album = self
-        self.tracks.append(track)
-        self.tracks.sort(key=lambda t: t.track_number)
+    def add_track(self, track: AlbumTrack) -> None:
+        if track not in self.tracks:
+            self.tracks.append(track)
+            track.album = self  # This is added cause track belongs to the album, and an album consists of albumtrack, aka. bidirectional association
 
-    def track_ids(self) -> set[str]:
+    def track_ids(self) -> Set[str]:
         return {track.track_id for track in self.tracks}
 
-    def duration_seconds(self):
+    def duration_seconds(self) -> int:
         return sum(track.duration_seconds for track in self.tracks)

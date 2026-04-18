@@ -39,12 +39,16 @@ def family_member(family_user: FamilyAccountUser) -> FamilyMember:
 
 @pytest.fixture
 def single_release(artist_a: Artist) -> SingleRelease:
-    return SingleRelease("t1", "Song A", 180, "pop", artist_a, release_date=date(2024, 1, 1))
+    return SingleRelease(
+        "t1", "Song A", 180, "pop", artist_a, release_date=date(2024, 1, 1)
+    )
 
 
 @pytest.fixture
 def another_release(artist_b: Artist) -> SingleRelease:
-    return SingleRelease("t2", "Song B", 200, "rock", artist_b, release_date=date(2024, 1, 2))
+    return SingleRelease(
+        "t2", "Song B", 200, "rock", artist_b, release_date=date(2024, 1, 2)
+    )
 
 
 @pytest.fixture
