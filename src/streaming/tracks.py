@@ -30,23 +30,36 @@ if TYPE_CHECKING:
 
 
 class Track(ABC):
+    """Base class for all playable content (songs, podcasts, audiobooks)."""
 
     def __init__(self, track_id: str, title: str, duration_seconds: int, genre: str):
+        """
+        Abstract base class
+        Initializes a track
+        Arguments:
+            track_id: identifier
+            title: track title
+            duration_seconds: length of track in seconds
+            genre:  content-type
+        """
         self.track_id = track_id
         self.title = title
         self.duration_seconds = duration_seconds
         self.genre = genre
 
     def duration_minutes(self) -> float:
+        """Converts duration from seconds to minutes"""
         return self.duration_seconds / 60.0
 
     def __eq__(self, other) -> bool:
+        """Tracks are equal if their IDs match."""
         if not isinstance(other, Track):
             return False
         return self.track_id == other.track_id
 
 
 class Song(Track):
+    """A music track by an artist"""
 
     def __init__(
         self,
@@ -61,6 +74,7 @@ class Song(Track):
 
 
 class SingleRelease(Song):
+    """A song (not part of album)"""
 
     def __init__(
         self,
@@ -76,6 +90,7 @@ class SingleRelease(Song):
 
 
 class AlbumTrack(Song):
+    """A song that belongs to an album"""
 
     def __init__(
         self,
@@ -93,6 +108,7 @@ class AlbumTrack(Song):
 
 
 class Podcast(Track):
+    """Base class for podcast episodes"""
 
     def __init__(
         self,
@@ -109,6 +125,7 @@ class Podcast(Track):
 
 
 class NarrativeEpisode(Podcast):
+    """Narrative podcast with episodes."""
 
     def __init__(
         self,
@@ -127,6 +144,8 @@ class NarrativeEpisode(Podcast):
 
 
 class InterviewEpisode(Podcast):
+    """Podcast episode of an interview"""
+
     def __init__(
         self,
         track_id: str,
@@ -142,6 +161,8 @@ class InterviewEpisode(Podcast):
 
 
 class AudiobookTrack(Track):
+    """A track of an audiobook"""
+
     def __init__(
         self,
         track_id: str,

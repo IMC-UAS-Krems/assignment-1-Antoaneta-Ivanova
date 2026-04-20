@@ -72,6 +72,12 @@ class StreamingPlatform:
     # Q1: Total Cumulative Listening Time---------------------------------------------------------------------------------------------------------
 
     def total_listening_time_minutes(self, start: datetime, end: datetime) -> float:
+        """Calculates the total listening time within a time window
+        Arguments:
+            start: start of the time window
+            end: end of the time window
+        Returns total listening time in minutes as a float
+        """
         total_cumulative_listening_time_in_minutes = 0
 
         for session in self._sessions:
@@ -85,6 +91,12 @@ class StreamingPlatform:
     # Q2: Average Unique Tracks per Premium User----------------------------------------------------------------------------------------------------------
 
     def avg_unique_tracks_per_premium_user(self, days: int = 30) -> float:
+        """
+        Calculates the average number of unique tracks listened to by premium users within the last given number of days
+        Arguments:
+            days: number of recent days to include
+        Returns average number of unique tracks per premium user as a float
+        """
 
         premium_users = [
             user for user in self._users.values() if isinstance(user, PremiumUser)
@@ -109,7 +121,10 @@ class StreamingPlatform:
     # Q3: Track with Most Distinct Listeners---------------------------------------------------------------------------------------------------------
 
     def track_with_most_distinct_listeners(self) -> Track | None:
-
+        """
+        Finds the track listened to by the highest number of distinct users
+        Returns the track with the most distinct listeners or None if there are no sessions
+        """
         if not self._sessions:
             return None
 
@@ -136,12 +151,14 @@ class StreamingPlatform:
             return self.get_track(track_with_most_distinct_listeners)
         else:
             return None
-           
-        
+
     # Q4: Average Session Duration by User Type--------------------------------------------------------------------------------------------------------------
 
     def avg_session_duration_by_user_type(self) -> list[tuple[str, float]]:
-
+        """
+        Calculate average session duration for each user type
+        Returns tuples of user type name and average and session duration in seconds, in descending order
+        """
         durations_by_type = {
             "FreeUser": [],
             "PremiumUser": [],
@@ -176,6 +193,11 @@ class StreamingPlatform:
     def total_listening_time_underage_sub_users_minutes(
         self, age_threshold: int = 18
     ) -> float:
+        """
+        Calculate total listening time for family members below a given age
+        Arguments: age_threshold: Maximum age threshold
+        Returns total listening time in minutes as a float
+        """
 
         total_minutes = 0.0
 
@@ -190,7 +212,11 @@ class StreamingPlatform:
     # Q6: Top Artists by Listening Time-----------------------------------------------------------------------------------------------------------------------
 
     def top_artists_by_listening_time(self, n: int = 5) -> list[tuple[Artist, float]]:
-
+        """
+        Returns the top artists ranked by song total listening time
+        Arguments: maximum number of artists
+        Returns tuples of artist and total listening time in minutes, in descending order
+        """
         artist_minutes = {}
 
         for listening_session in self._sessions:
@@ -212,7 +238,11 @@ class StreamingPlatform:
     # Q7: User's Top Genre-------------------------------------------------------------------------------------------------------------------------
 
     def user_top_genre(self, user_id: str) -> tuple[str, float] | None:
-
+        """
+        Find the genre a user listened to the most and its percentage share
+        Arguments: user_id: ID of the user
+        Returns the top genre and its percentage of the user's total listening time, or None if the user does not exist or has no sessions
+        """
         user = self._users.get(user_id)
         if not user or not user.sessions:
             return None
@@ -237,6 +267,11 @@ class StreamingPlatform:
     def collaborative_playlists_with_many_artists(
         self, threshold: int = 3
     ) -> list[CollaborativePlaylist]:
+        """
+        Returnsd collaborative playlists containing tracks by more than a given number of unique artists
+        Arguments: threshold: Minimum number of unique artists required
+        Returns matching collaborative playlists as a list
+        """
 
         result = []
 
@@ -256,7 +291,10 @@ class StreamingPlatform:
     # Q9: Average Tracks per Playlist Type---------------------------------------------------------------------------------------------------------
 
     def avg_tracks_per_playlist_type(self) -> dict[str, float]:
-
+        """
+        Calculates the average number of tracks for normal playlists and collaborative playlists
+        Returnsa dictionary of average track counts for each playlist type
+        """
         total_tracks_playlist = 0
         count_playlist = 0
 
@@ -285,6 +323,11 @@ class StreamingPlatform:
     # Q10: Users Who Completed Albums--------------------------------------------------------------------------------------------------------------
 
     def users_who_completed_albums(self) -> list[tuple[User, list[str]]]:
+        """
+        Finds users who have listened to every track of at least one album
+        Returns tuples containing the user and the titles of albums they completed
+        """
+
         result = []
 
         for user in self._users.values():
